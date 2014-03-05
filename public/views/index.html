@@ -1,0 +1,51 @@
+<!-- index.html -->
+<!DOCTYPE html>
+
+<!-- ASSIGN OUR ANGULAR MODULE -->
+<html lang="en" ng-app="helloSignApp">
+<head>
+	<!-- META -->
+	<meta charset="utf-8">
+
+	<title>HelloSign</title>
+
+	<!-- FAVICON -->
+	<link rel="shortcut icon" href="/public/img/favicon.png">
+
+	<!-- SCROLLS -->
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+	<link rel="stylesheet" href="/public/css/index.css">
+	<!-- load bootstrap -->
+
+	<!-- SPELLS -->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
+
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="/public/js/app.js"></script>
+	<script src="/public/js/services.js"></script>
+	<script src="/public/js/controllers.js"></script>
+
+	<!-- Relative routing for $locationProvider. -->
+	<base href="/">
+</head>
+
+<body>
+	<div class="container">
+		<div class="row ">
+			<div style="width: 400px; margin: 40px auto">
+				<form class="form-group" name="userInfo">
+					<input type="text" placeholder="Full name" class="form-control form-group">
+					<input type="text" placeholder="Email address" class="form-control form-group">
+					<input type="text" placeholder="Phone number" class="form-control form-group">
+					<input type="text" placeholder="Signer PIN" class="form-control form-group">
+					<div class="btn btn-primary" ng-click="signatureRequest.submit()">
+						Submit
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
