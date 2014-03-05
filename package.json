@@ -1,12 +1,12 @@
 {
-  "name": "MEAN",
-  "description": "Readily deployable seed MEAN app",
+  "name": "HelloSign Signature Request",
+  "description": "Send a PIN-protected signature request via the web.",
   "version": "0.0.1",
   "author": "Andy Jiang",
   "main": "server.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lambtron/MEAN"
+    "url": "https://github.com/lambtron/hellosign"
   },
   "engines": {
     "node": "0.10.22",
@@ -19,7 +19,7 @@
     "underscore": "latest",
     "request": "latest",
     "socket.io": "latest",
-    "node-hellosign": "*",
+    "node-hellosign": "latest",
     "twilio": "latest"
   }
 }
