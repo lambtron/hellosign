@@ -1,5 +1,5 @@
 {
-  "name": "HelloSign Signature Request",
+  "name": "HelloSign-Signature-Request",
   "description": "Send a PIN-protected signature request via the web.",
   "version": "0.0.1",
   "author": "Andy Jiang",

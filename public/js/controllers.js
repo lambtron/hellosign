@@ -13,6 +13,7 @@ helloSignApp.controller('mainController',
 			pin: ''	
 		},
 		submit: function submit() {
+			console.log('submitting..');
 			$http.post('/api/sigreq', this.postLoad)
 			.success( function (data) {
 				console.log('Success:');

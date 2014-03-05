@@ -32,14 +32,14 @@
 </head>
 
 <body>
-	<div class="container">
+	<div class="container" ng-controller="mainController">
 		<div class="row ">
 			<div style="width: 400px; margin: 40px auto">
 				<form class="form-group" name="userInfo">
-					<input type="text" placeholder="Full name" class="form-control form-group">
-					<input type="text" placeholder="Email address" class="form-control form-group">
-					<input type="text" placeholder="Phone number" class="form-control form-group">
-					<input type="text" placeholder="Signer PIN" class="form-control form-group">
+					<input type="text" placeholder="Full name" class="form-control form-group" ng-model="signatureRequest.postLoad.name">
+					<input type="text" placeholder="Email address" class="form-control form-group" ng-model="signatureRequest.postLoad.email">
+					<input type="text" placeholder="Phone number" class="form-control form-group" ng-model="signatureRequest.postLoad.number">
+					<input type="text" placeholder="Signer PIN" class="form-control form-group" ng-model="signatureRequest.postLoad.pin">
 					<div class="btn btn-primary" ng-click="signatureRequest.submit()">
 						Submit
 					</div>
