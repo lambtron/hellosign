@@ -6,14 +6,9 @@
  * Import helpers ==============================================================
  */
 require('../config/config');
-var request = require('request');
 
-// var hs = require('node-hellosign')
-var username = process.env.HELLOSIGN_USERNAME
-  , password = process.env.HELLOSIGN_PASSWORD;
-//   , HelloSign = new hs({username: username, password: password});
-
-var Twilio = require('twilio')(process.env.TWILIO_ASID,
+var hellosign = require('../app/controllers/hellosign')
+	, Twilio = require('twilio')(process.env.TWILIO_ASID,
   process.env.TWILIO_AUTH_TOKEN)
 	, twilio_number = process.env.TWILIO_NUMBER;
 
@@ -24,67 +19,67 @@ module.exports = function (app, io) {
 	app.post('/api/sigreq', function (req, res) {
 		var load = req.body;
 
-		var qs = {
-			test_mode: 1,
-			reusable_form_id: '9417e81c9241c46e964984fd0594e8a7bc5df9f4',
-			// title: 'Sign title',
-			// subject: 'Subject line',
-			// message: 'The message goes here.',
-			signing_redirect_url: 'http://www.google.com/',
-			signers: {
-				Sexiest: {
-					name: 'Andy',
-					email_address: 'andyjiang@gmail.com',
-					pin: '1234'
-				}
-			}
-		};
-
-		var opts = {
-			uri: 'https://api.hellosign.com/v3/signature_request/send_reusable_form',
-			method: "POST",
-			timeout: 10000,
-			followRedirect: true,
-			maxRedirects: 10,
-			qs: qs
-		};
-
-		// Send POST to HelloSign: name, email address, PIN, funny document.
-		request(opts, function (err, r, body) {
+		hellosign.setCallbackUrl('http://hellosign-andy.herokuapp.com/api/events'
+		// hellosign.setCallbackUrl('http://4fa26fca.ngrok.com/api/events/'
+			+ load.number, function (err, r, body) {
 			if (err)
 				res.send(err, 400);
 
-			console.log(body);
-
+			// console.log('setting callback url');
+			// console.log(body);
 			res.send(body, 200);
 		});
 
-		// HelloSign.createRequest(opts, function (er, res) {
-		// 	console.log('HelloSign response:');
-		// 	console.log(res);
-		// });
+		hellosign.createSigRequest(load, function (err, r, body) {
+			if (err)
+				res.send(err, 400);
+
+			// console.log('sigreq created');
+			// console.log(body);
+			res.send(body, 200);
+		});
 
 		// Send POST to Twilio to send SMS to number with PIN as body.
 		Twilio.sendMessage({
-      to: '+12409887757',
+      to: load.number,
       from: twilio_number,
       body: 'The PIN needed for your signature request is ' + load.pin
     }, function (err, responseData) {
-      if (!err) {
-        // console.log(responseData);
-      } else {
+      if (err)
         console.log(err);
-      }
     });
 	});
 
 	// Endpoint for HelloSign webhook
-	app.post('/api/sigreq/success', function (req, res) {
-		console.log('Helosign webhook');
-		console.log(req.body);
-		// If success, initiate SMS body 'success'.
+	app.post('/api/events/:number', function (req, res) {
+		var load = JSON.parse(req.body.json)
+			, body = '';
 
-		// Otherwise, initiate SMS body 'failure'.
+		// console.log(load);
+
+		if (load.event.event_type === 'signature_request_sent') {
+			body = 'Hey ' + load.signature_request.signatures[0].signer_name
+				+ ', the signature request is sent to '
+				+ load.signature_request.signatures[0].signer_email_address;
+		} else if (load.event.event_type === 'signature_request_signed') {
+			body = 'Your e-signature was received! Thank you.';
+		}
+
+		if (body.length > 0) {
+			Twilio.sendMessage({
+				to: '+1' + req.params.number,
+				from: twilio_number,
+				body: body
+			}, function (err, res) {
+				if (err)
+					console.log(err);
+			});
+		}
+		
+		// console.log(req.params.number);
+		// console.log(body);
+
+		res.send("Hello API Event Received", 200);
 	});
 
 	// Application routes ========================================================
