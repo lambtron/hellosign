@@ -14,7 +14,7 @@ var hellosign = require('../app/controllers/hellosign')
 
 
 // Public functions. ===========================================================
-module.exports = function (app, io) {
+module.exports = function (app) {
 	// API routes ================================================================
 	app.post('/api/sigreq', function (req, res) {
 		var load = req.body;

@@ -15,10 +15,8 @@
   "private": true,
   "dependencies": {
     "express": "3.x",
-    "mongoose": "2.x",
     "underscore": "latest",
     "request": "latest",
-    "node-hellosign": "latest",
     "twilio": "latest"
   }
 }
