@@ -6,11 +6,12 @@
  * Import helpers ==============================================================
  */
 require('../config/config');
+var request = require('request');
 
-var hs = require('node-hellosign')
-  , username = process.env.HELLOSIGN_USERNAME
-  , password = process.env.HELLOSIGN_PASSWORD
-  , HelloSign = new hs({username: username, password: password});
+// var hs = require('node-hellosign')
+var username = process.env.HELLOSIGN_USERNAME
+  , password = process.env.HELLOSIGN_PASSWORD;
+//   , HelloSign = new hs({username: username, password: password});
 
 var Twilio = require('twilio')(process.env.TWILIO_ASID,
   process.env.TWILIO_AUTH_TOKEN)
@@ -21,11 +22,9 @@ var Twilio = require('twilio')(process.env.TWILIO_ASID,
 module.exports = function (app, io) {
 	// API routes ================================================================
 	app.post('/api/sigreq', function (req, res) {
-		console.log(req.body);
 		var load = req.body;
 
-		// Send POST to HelloSign: name, email address, PIN, funny document.
-		var opts = {
+		var qs = {
 			test_mode: 1,
 			reusable_form_id: '9417e81c9241c46e964984fd0594e8a7bc5df9f4',
 			// title: 'Sign title',
@@ -40,14 +39,34 @@ module.exports = function (app, io) {
 				}
 			}
 		};
-		HelloSign.createRequest(opts, function (er, res) {
-			console.log('HelloSign response:');
-			console.log(res);
+
+		var opts = {
+			uri: 'https://api.hellosign.com/v3/signature_request/send_reusable_form',
+			method: "POST",
+			timeout: 10000,
+			followRedirect: true,
+			maxRedirects: 10,
+			qs: qs
+		};
+
+		// Send POST to HelloSign: name, email address, PIN, funny document.
+		request(opts, function (err, r, body) {
+			if (err)
+				res.send(err, 400);
+
+			console.log(body);
+
+			res.send(body, 200);
 		});
+
+		// HelloSign.createRequest(opts, function (er, res) {
+		// 	console.log('HelloSign response:');
+		// 	console.log(res);
+		// });
 
 		// Send POST to Twilio to send SMS to number with PIN as body.
 		Twilio.sendMessage({
-      to: load.number,
+      to: '+12409887757',
       from: twilio_number,
       body: 'The PIN needed for your signature request is ' + load.pin
     }, function (err, responseData) {
@@ -61,6 +80,8 @@ module.exports = function (app, io) {
 
 	// Endpoint for HelloSign webhook
 	app.post('/api/sigreq/success', function (req, res) {
+		console.log('Helosign webhook');
+		console.log(req.body);
 		// If success, initiate SMS body 'success'.
 
 		// Otherwise, initiate SMS body 'failure'.
