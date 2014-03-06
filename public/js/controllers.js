@@ -1,8 +1,8 @@
 'use strict';
 
 helloSignApp.controller('mainController',
-  ['$scope', '$http', 'socket',
-	function ($scope, $http, socket)
+  ['$scope', '$http',
+	function ($scope, $http)
 {
 	// Initialize variables.
 	var signatureRequest = $scope.signatureRequest = {
