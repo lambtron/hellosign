@@ -59,7 +59,7 @@ module.exports = function (app) {
 
 		if (load.event.event_type === 'signature_request_sent') {
 			body = 'Hey ' + load.signature_request.signatures[0].signer_name
-				+ ', the signature request is sent to '
+				+ ', a signature request is sent to '
 				+ load.signature_request.signatures[0].signer_email_address;
 		} else if (load.event.event_type === 'signature_request_signed') {
 			body = 'Your e-signature was received! Thank you.';

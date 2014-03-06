@@ -37,15 +37,18 @@
 					Please fill in the recipient information below to send him/her the signature request.
 				</h3>
 				<hr>
-				<form class="form-group" name="userInfo">
-					<input type="text" placeholder="Full name" class="form-control form-group" ng-model="signatureRequest.postLoad.name">
-					<input type="text" placeholder="Email address" class="form-control form-group" ng-model="signatureRequest.postLoad.email">
-					<input type="text" placeholder="Phone number" class="form-control form-group" ng-model="signatureRequest.postLoad.number">
-					<input type="text" placeholder="Four digit signer PIN" class="form-control form-group" ng-model="signatureRequest.postLoad.pin">
-					<div class="btn btn-primary" ng-click="signatureRequest.submit()">
+				<form class="form-group" name="userInfo" ng-hide="signatureRequest.submitted">
+					<input type="text" placeholder="Full name" class="form-control form-group" ng-model="signatureRequest.postLoad.name" required>
+					<input type="text" placeholder="Email address" class="form-control form-group" ng-model="signatureRequest.postLoad.email" required>
+					<input type="text" placeholder="Phone number" class="form-control form-group" ng-model="signatureRequest.postLoad.number" required>
+					<input type="text" placeholder="Four digit signer PIN" class="form-control form-group" ng-model="signatureRequest.postLoad.pin" required>
+					<div class="btn btn-primary" ng-click="signatureRequest.submit()" ng-disabled="!userInfo.$valid">
 						Submit
 					</div>
 				</form>
+				<div class="alert alert-success" ng-show="signatureRequest.submitted">
+					Thank you for submitting.
+				</div>
 			</div>
 		</div>
 	</div>
