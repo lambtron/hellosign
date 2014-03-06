@@ -19,7 +19,7 @@ module.exports = function (app, io) {
 	app.post('/api/sigreq', function (req, res) {
 		var load = req.body;
 
-		hellosign.setCallbackUrl('http://hellosign-andy.herokuapp.com/api/events'
+		hellosign.setCallbackUrl('http://hellosign-andy.herokuapp.com/api/events/'
 		// hellosign.setCallbackUrl('http://4fa26fca.ngrok.com/api/events/'
 			+ load.number, function (err, r, body) {
 			if (err)
